@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
 import MessageList from './MessageList';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Messages extends Component {
   constructor(props) {
@@ -42,6 +43,9 @@ class Messages extends Component {
         this.setState({ loading: false });
       });
   };
+
+  
+
 
   componentWillUnmount() {
     this.props.firebase.messages().off();
@@ -104,10 +108,70 @@ class Messages extends Component {
     const { title, description, loading } = this.state;
 
     return (
-      <div>
+      <div className="container">
+      <div className="row">
+      <div className="col-md-6">
+      <div className="form-group">
 
-        {loading && <div>Loading ...</div>}
+       
 
+        <form
+          onSubmit={event =>
+            this.onCreateMessage(event, this.props.authUser)
+          }
+        >
+          <input
+            type="text"
+            value={title}
+            placeholder="Title"
+            className="form-control"
+            onChange={this.onChangeText}
+          />
+          <br></br>
+          <textarea
+            type="text"
+            value={description}
+            placeholder="Description"
+            className="form-control"
+            onChange={this.onChangeDescription}
+          />
+          <br></br>
+  
+          <select value={this.state.category} onChange={this.onChangeCategory} className="form-control">
+            <option>Category</option>
+            <option value="Blockchain" >Blockchain</option>
+            <option value="IoT">IoT</option>
+            <option value="Game tech">Game tech</option>
+            <option value="AI">AI</option>
+            <option value="Robotics">Robotics</option>
+          </select>
+          <br></br>
+          <div className="form-check">
+          <input type="radio" className="form-check-input" name="status" 
+                                   value='draft'
+                                   checked={this.state.status === 'draft'} 
+                                   onChange={this.onChangeStatus} />
+                                   <label className="form-check-label" htmlFor="exampleRadios1">
+                                   Draft
+          </label>
+          </div>
+          <div className="form-check">
+          <input type="radio" className="form-check-input" name="status" 
+                                   value='published'
+                                   checked={this.state.status === 'published'} 
+                                   onChange={this.onChangeStatus} />
+                                   <label className="form-check-label" htmlFor="exampleRadios1">
+                                   Published
+          </label>
+          </div>
+          <br></br>
+          <button type="submit" className="btn btn-primary">Add Post</button>
+        </form>
+      </div>
+      </div>
+      <div className="col-md-6">
+      {loading && <div>Loading ...</div>}
+     
         {messages && (
           <MessageList
             messages={messages.map(message => ({
@@ -122,48 +186,8 @@ class Messages extends Component {
         )}
 
         {!messages && <div>There are no messages ...</div>}
-
-        <form
-          onSubmit={event =>
-            this.onCreateMessage(event, this.props.authUser)
-          }
-        >
-          <input
-            type="text"
-            value={title}
-            placeholder="Title"
-            onChange={this.onChangeText}
-          />
-          <br></br>
-          <textarea
-            type="text"
-            value={description}
-            placeholder="Description"
-            onChange={this.onChangeDescription}
-          />
-          <br></br>
-  
-          <select value={this.state.category} onChange={this.onChangeCategory}>
-            <option>Category</option>
-            <option value="Blockchain" >Blockchain</option>
-            <option value="IoT">IoT</option>
-            <option value="Game tech">Game tech</option>
-            <option value="AI">AI</option>
-            <option value="Robotics">Robotics</option>
-          </select>
-          <br></br>
-          <input type="radio" name="status" 
-                                   value='draft'
-                                   checked={this.state.status === 'draft'} 
-                                   onChange={this.onChangeStatus} />Draft
-          <input type="radio" name="status" 
-                                   value='published'
-                                   checked={this.state.status === 'published'} 
-                                   onChange={this.onChangeStatus} />Published
-          <br></br>
-          <br></br>
-          <button type="submit">Submit Post</button>
-        </form>
+      </div>
+      </div>
       </div>
     );
   }

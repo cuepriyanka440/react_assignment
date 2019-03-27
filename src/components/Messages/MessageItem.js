@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { createConnection } from 'net';
 
 class MessageItem extends Component {
   constructor(props) {
@@ -55,23 +56,25 @@ class MessageItem extends Component {
   render() {
     const { message, onRemoveMessage } = this.props;
     const { editMode, editTitle, editDescription, editCategory, editStatus } = this.state;
-
+    const style ={ border: '1px solid #cccccc', padding: '10px' }
     return (
       <li>
         {editMode ? (
-          <div>
+          <div style={style}>
           <input
             type="text"
             value={editTitle}
+            className="form-control"
             onChange={this.onChangeEditText}
           />
           <textarea
             type="text"
             value={editDescription}
             placeholder="Description"
+            className="form-control"
             onChange={this.onChangeEditDescription}
           />
-          <select value={editCategory} onChange={this.onChangeEditCategory}>
+          <select value={editCategory} onChange={this.onChangeEditCategory} className="form-control">
             <option>Category</option>
             <option value="Blockchain" >Blockchain</option>
             <option value="IoT">IoT</option>
@@ -80,25 +83,32 @@ class MessageItem extends Component {
             <option value="Robotics">Robotics</option>
           </select>
           <br></br>
-          <input type="radio" name="status" 
-                                   value='draft'
-                                   checked={editStatus === 'draft'} 
-                                   onChange={this.onChangeEditStatus} />Draft
-          <input type="radio" name="status" 
-                                   value='published'
-                                   checked={editStatus === 'published'} 
-                                   onChange={this.onChangeEditStatus} />Published
+          <div class="form-check">
+            <input type="radio" className="form-check-input" name="status" 
+                                    value='draft'
+                                    checked={editStatus === 'draft'} 
+                                    onChange={this.onChangeEditStatus} />
+                                      <label class="form-check-label" for="exampleRadios1">
+                                      Draft
+            </label>
+            </div>
+            <div class="form-check">
+            <input type="radio" className="form-check-input" name="status" 
+                                    value='published'
+                                    checked={editStatus === 'published'} 
+                                    onChange={this.onChangeEditStatus} /><label class="form-check-label" for="exampleRadios1">
+                                    Published
+          </label>
+         </div>
           </div>
           
         ) : (
           <span>
-            <strong>
-              {message.user.username || message.user.userId}
-            </strong>{' '}
+           
             {message.title}
           </span>
         )}
-
+    
         {editMode ? (
           <span>
             <button onClick={this.onSaveEditText}>Save</button>
@@ -106,15 +116,17 @@ class MessageItem extends Component {
           </span>
         ) : (
           <button onClick={this.onToggleEditMode}>Edit</button>
+
         )}
 
         {!editMode && (
           <button
-            type="button"
+            type="button" 
             onClick={() => onRemoveMessage(message.uid)}
           >
             Delete
           </button>
+          
         )}
       </li>
     );
